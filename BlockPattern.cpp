@@ -186,6 +186,8 @@ void LIGHT::test()
 					case STATE_SPEED:	fprintf_Log_forTestCode(fp, "STATE_SPEED ");	break;
 					case STATE_STROBE:	fprintf_Log_forTestCode(fp, "STATE_STROBE ");	break;
 					case STATE_BEAT:	fprintf_Log_forTestCode(fp, "STATE_BEAT ");		break;
+					case STATE_ON:		fprintf_Log_forTestCode(fp, "STATE_ON ");		break;
+					case STATE_OFF:		fprintf_Log_forTestCode(fp, "STATE_OFF ");		break;
 				}
 				
 				// 
