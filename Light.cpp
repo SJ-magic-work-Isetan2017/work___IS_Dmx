@@ -1,4 +1,15 @@
 /************************************************************
+setup for ISETAN DMX controller
+	Hardware setting
+		wifi off
+		Firewall off
+		IP address
+			IPv4の設定	手入力
+			IP			2.0.0.2
+			subnet mask	255.0.0.0
+		
+	Software setting
+		"ISETAN_DMX"の箇所
 ************************************************************/
 #include "L_common.h"
 #include "shortPattern.h"
@@ -112,20 +123,22 @@ param
 ********************/
 static ODE ode[] = {
 	// ODE("10.7.157.106"),
-	ODE("10.7.206.7"),
+	// ODE("10.7.206.7"),
+	ODE("2.106.193.8"),
 };
 static const int NUM_ODES = sizeof(ode) / sizeof(ode[0]);
 
 /********************
+ISETAN_DMX
 ********************/
 static LED_LIGHT LedLight[] = {
 //				ODE id		AddressFrom					Hardware(Start Address) setting 
-/*	0	*/	LED_LIGHT(	0	,	0	,	LED_DEVICE_TYPE_SONY	),	//	1
-/*	1	*/	LED_LIGHT(	0	,	6	,	LED_DEVICE_TYPE_SONY	),	//	7
-/*	2	*/	LED_LIGHT(	0	,	12	,	LED_DEVICE_TYPE_SONY	),	//	13
-/*	3	*/	LED_LIGHT(	0	,	18	,	LED_DEVICE_TYPE_SONY	),	//	19
-/*	4	*/	LED_LIGHT(	0	,	24	,	LED_DEVICE_TYPE_SONY	),	//	25
-/*	5	*/	LED_LIGHT(	0	,	30	,	LED_DEVICE_TYPE_SONY	),	//	31
+/*	0	*/	LED_LIGHT(	0	,	0	,	LED_DEVICE_TYPE_ISETAN	),	//	1
+/*	1	*/	LED_LIGHT(	0	,	7	,	LED_DEVICE_TYPE_ISETAN	),	//	8
+/*	2	*/	LED_LIGHT(	0	,	14	,	LED_DEVICE_TYPE_ISETAN	),	//	15
+/*	3	*/	LED_LIGHT(	0	,	21	,	LED_DEVICE_TYPE_ISETAN	),	//	22
+/*	4	*/	LED_LIGHT(	0	,	28	,	LED_DEVICE_TYPE_ISETAN	),	//	29
+/*	5	*/	LED_LIGHT(	0	,	35	,	LED_DEVICE_TYPE_ISETAN	),	//	36
 };
 
 static const int NUM_LEDS = sizeof(LedLight) / sizeof(LedLight[0]);
@@ -399,9 +412,11 @@ void LIGHT::Send_AllZero_to_AllOde()
 void LIGHT::setup()
 {
 	/********************
+	ISETAN_DMX
 	********************/
     //at first you must specify the Ip address of this machine
-    artnet.setup("10.0.0.2"); //make sure the firewall is deactivated at this point
+    // artnet.setup("10.0.0.2"); //make sure the firewall is deactivated at this point
+	artnet.setup("2.0.0.2"); //make sure the firewall is deactivated at this point
 	
 	/********************
 	********************/
@@ -825,7 +840,7 @@ void LIGHT::draw_test()
 				}
 				break;
 				
-			case LED_DEVICE_TYPE_ISETAN:
+			case LED_DEVICE_TYPE_ISETAN: // ISETAN_DMX
 				if(i == Gui_Param->LedId){
 					ofColor color = Gui_Param->TestColor;
 					
@@ -833,7 +848,9 @@ void LIGHT::draw_test()
 					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 1 ] = color.r;
 					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 2 ] = color.g;
 					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 3 ] = color.b;
-					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 4 ] = 0; // w
+					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 4 ] = 0; // W
+					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 5 ] = 0; // Strobe
+					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 6 ] = 0; // Color function.
 					
 				}else{
 					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 0 ] = 0;
@@ -841,6 +858,8 @@ void LIGHT::draw_test()
 					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 2 ] = 0;
 					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 3 ] = 0;
 					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 4 ] = 0;
+					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 5 ] = 0;
+					ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 6 ] = 0;
 					
 				}
 				break;
@@ -872,12 +891,14 @@ void LIGHT::draw_demo()
 				
 				break;
 				
-			case LED_DEVICE_TYPE_ISETAN:
+			case LED_DEVICE_TYPE_ISETAN: // ISETAN_DMX
 				ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 0 ] = Gui_Param->Alpha_FixedLed;
 				ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 1 ] = LedLight[i].LedParam.R;
 				ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 2 ] = LedLight[i].LedParam.G;
 				ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 3 ] = LedLight[i].LedParam.B;
 				ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 4 ] = 0; // LedLight[i].LedParam.W;
+				ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 5 ] = 0; // Strobe.
+				ode[ LedLight[i].ODE_id ].universe[ LedLight[i].AddressFrom + 6 ] = 0; // Color function.
 				
 				break;
 		}
