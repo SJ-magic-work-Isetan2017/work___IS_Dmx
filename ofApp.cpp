@@ -30,11 +30,16 @@ void ofApp::exit()
 {
 	Light.exit();
 	
+	fclose_LogFile();
 	printf("\n> Good bye\n");
 }
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	/********************
+	********************/
+	fopen_LogFile();
+	
 	/********************
 	********************/
 	font.loadFont("RictyDiminished-Regular.ttf", 15);
