@@ -57,9 +57,11 @@ public:
 struct LED_PARAM{
 private:
 	void xRatio_eachCh(unsigned char& val, double ratio){
-		val = (unsigned char)(val * ratio);
-		if(val < 0)		val = 0;
-		if(255 < val)	val = 255;
+		int _val = (int)(val * ratio);
+		
+		if(_val < 0)		val = 0;
+		else if(255 < _val)	val = 255;
+		else				val = _val;
 	}
 	
 	void set_1ch(unsigned char& val, int NewVal){
@@ -123,8 +125,12 @@ param
 ********************/
 static ODE ode[] = {
 	// ODE("10.7.157.106"),
-	// ODE("10.7.206.7"),
+	
+#ifdef ISETAN
 	ODE("2.106.193.8"),
+#else
+	ODE("10.7.206.7"),
+#endif
 };
 static const int NUM_ODES = sizeof(ode) / sizeof(ode[0]);
 
@@ -132,6 +138,7 @@ static const int NUM_ODES = sizeof(ode) / sizeof(ode[0]);
 ISETAN_DMX
 ********************/
 static LED_LIGHT LedLight[] = {
+#ifdef ISETAN
 //				ODE id		AddressFrom					Hardware(Start Address) setting 
 /*	0	*/	LED_LIGHT(	0	,	0	,	LED_DEVICE_TYPE_ISETAN	),	//	1
 /*	1	*/	LED_LIGHT(	0	,	7	,	LED_DEVICE_TYPE_ISETAN	),	//	8
@@ -139,6 +146,17 @@ static LED_LIGHT LedLight[] = {
 /*	3	*/	LED_LIGHT(	0	,	21	,	LED_DEVICE_TYPE_ISETAN	),	//	22
 /*	4	*/	LED_LIGHT(	0	,	28	,	LED_DEVICE_TYPE_ISETAN	),	//	29
 /*	5	*/	LED_LIGHT(	0	,	35	,	LED_DEVICE_TYPE_ISETAN	),	//	36
+#else
+//				ODE id		AddressFrom					Hardware(Start Address) setting 
+/*	0	*/	LED_LIGHT(	0	,	0	,	LED_DEVICE_TYPE_SONY	),	//	1
+/*	1	*/	LED_LIGHT(	0	,	6	,	LED_DEVICE_TYPE_SONY	),	//	7
+/*	2	*/	LED_LIGHT(	0	,	12	,	LED_DEVICE_TYPE_SONY	),	//	13
+/*	3	*/	LED_LIGHT(	0	,	18	,	LED_DEVICE_TYPE_SONY	),	//	19
+/*	4	*/	LED_LIGHT(	0	,	24	,	LED_DEVICE_TYPE_SONY	),	//	25
+/*	5	*/	LED_LIGHT(	0	,	30	,	LED_DEVICE_TYPE_SONY	),	//	31
+#endif
+
+
 };
 
 static const int NUM_LEDS = sizeof(LedLight) / sizeof(LedLight[0]);
@@ -415,8 +433,11 @@ void LIGHT::setup()
 	ISETAN_DMX
 	********************/
     //at first you must specify the Ip address of this machine
-    // artnet.setup("10.0.0.2"); //make sure the firewall is deactivated at this point
+#ifdef ISETAN
 	artnet.setup("2.0.0.2"); //make sure the firewall is deactivated at this point
+#else
+    artnet.setup("10.0.0.2"); //make sure the firewall is deactivated at this point
+#endif
 	
 	/********************
 	********************/

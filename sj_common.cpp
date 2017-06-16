@@ -36,7 +36,7 @@ void GUI_PARAM::setup(string GuiName, string FileName, float x, float y)
 	********************/
 	gui.add(Alpha_FixedLed.setup("Alpha_FixedLed", 255, 0, 255));
 	
-	gui.add(fftGain_Range.setup("fftGain_Range", 0.005, 0, 0.2));
+	gui.add(fftGain_Range.setup("fftGain_Range", 0.015, 0, 0.2));
 	
 	/********************
 	********************/
